@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — 林士恩 Shi-en Lin</title>
+  <meta name="description" content="林士恩 Shi-en Lin 的作品集 — 互動裝置、3D、UI/UX、聲音設計。">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ---- Portfolio-only styles ---- */
+
+    /* Page hero */
+    .page-hero {
+      min-height: 50vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero-bg { position: absolute; inset: 0; pointer-events: none; }
+    .ph-ring {
+      position: absolute; border-radius: 50%; border: 1px solid;
+      transform: translate(-50%,-50%);
+      animation: breathe 7s ease-in-out infinite alternate;
+    }
+    .ph-r1 { width:400px; height:400px; top:60%; left:80%; border-color:rgba(212,114,42,.12); }
+    .ph-r2 { width:650px; height:650px; top:60%; left:80%; border-color:rgba(201,168,76,.07); animation-delay:-3s; }
+    @keyframes breathe {
+      from { transform:translate(-50%,-50%) scale(.97); }
+      to   { transform:translate(-50%,-50%) scale(1.03); }
+    }
+
+    .page-hero-content { position: relative; z-index: 2; padding-top: 8rem; }
+
+    .page-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .25em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      opacity: 0; animation: fadeUp .5s .2s forwards;
+    }
+    .page-title {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: .9;
+      letter-spacing: -.03em;
+      opacity: 0; animation: fadeUp .6s .38s forwards;
+    }
+    .page-title .outline {
+      -webkit-text-stroke: 1.5px var(--sand);
+      color: transparent;
+      display: block;
+    }
+    .page-sub {
+      margin-top: 2rem;
+      font-size: .88rem;
+      color: var(--muted);
+      letter-spacing: .05em;
+      opacity: 0; animation: fadeUp .6s .55s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:none; }
+    }
+
+    /* ---- Works ---- */
+    .works-section { padding: 5rem 3rem; }
+
+    .works-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .toolbar-left { display: flex; align-items: center; gap: 1rem; }
+    .works-count {
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+      letter-spacing: .15em;
+    }
+    .edit-hint {
+      font-size: .72rem;
+      color: rgba(168,152,128,.5);
+      padding: .3rem .8rem;
+      border: 1px dashed rgba(168,152,128,.25);
+      border-radius: 4px;
+    }
+
+    /* Filter tabs */
+    .filter-tabs { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .filter-tab {
+      padding: .3rem .9rem;
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      border: 1px solid rgba(240,230,211,.12);
+      border-radius: 2px;
+      color: var(--muted);
+      background: transparent;
+      transition: all .2s;
+    }
+    .filter-tab:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-tab.active { background: var(--accent); color: var(--ink); border-color: var(--accent); }
+
+    /* Grid */
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px;
+      background: rgba(240,230,211,.05);
+    }
+
+    .work-card {
+      background: var(--ink);
+      padding: 2.2rem 2rem;
+      border: 1px solid rgba(240,230,211,.06);
+      position: relative; overflow: hidden;
+      transition: background .3s;
+    }
+    .work-card:hover { background: rgba(212,114,42,.06); }
+    .work-card::after {
+      content: ''; position: absolute; bottom:0; left:0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width .38s cubic-bezier(.16,1,.3,1);
+    }
+    .work-card:hover::after { width: 100%; }
+
+    .work-index {
+      font-family: 'Space Mono', monospace;
+      font-size: .62rem;
+      color: rgba(168,152,128,.3);
+      letter-spacing: .1em;
+      margin-bottom: 1.8rem;
+    }
+
+    .work-emoji-btn {
+      font-size: 2rem; display: block; margin-bottom: 1rem;
+      background: none; border: none; padding: 0;
+      cursor: none; transition: transform .3s;
+      text-align: left; line-height: 1;
+    }
+    .work-card:hover .work-emoji-btn { transform: rotate(-7deg) scale(1.15); }
+
+    /* Editable fields */
+    .work-cat-input {
+      font-family: 'Space Mono', monospace;
+      font-size: .6rem; letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--accent); background: transparent; border: none; outline: none;
+      width: 100%; margin-bottom: 1.5rem;
+    }
+    .work-cat-input::placeholder { color: rgba(212,114,42,.3); }
+
+    .work-title-input {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.1rem; font-weight: 500;
+      color: var(--sand); background: transparent;
+      border: none; border-bottom: 1px solid rgba(240,230,211,.1);
+      width: 100%; padding: .2rem 0 .4rem;
+      margin-bottom: .8rem; outline: none;
+      transition: border-color .2s;
+    }
+    .work-title-input:focus { border-color: var(--accent); }
+    .work-title-input::placeholder { color: rgba(168,152,128,.35); }
+
+    .work-desc-input {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: .82rem; color: var(--muted);
+      background: transparent; border: none; outline: none;
+      width: 100%; resize: none; line-height: 1.75; height: 3.6rem;
+    }
+    .work-desc-input::placeholder { color: rgba(168,152,128,.28); font-style: italic; }
+
+    .work-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(240,230,211,.06);
+    }
+    .work-save-btn {
+      padding: .3rem .85rem;
+      background: transparent;
+      border: 1px solid rgba(212,114,42,.35);
+      border-radius: 3px;
+      color: var(--accent);
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem; letter-spacing: .1em;
+      cursor: none; transition: all .2s;
+      opacity: 0; pointer-events: none;
+    }
+    .work-card:focus-within .work-save-btn { opacity: 1; pointer-events: auto; }
+    .work-save-btn:hover { background: var(--accent); color: var(--ink); }
+
+    .work-tag-input {
+      font-size: .7rem;
+      color: rgba(168,152,128,.4);
+      background: transparent; border: none; outline: none;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: .06em;
+      width: 130px;
+    }
+    .work-tag-input::placeholder { color: rgba(168,152,128,.25); }
+
+    /* Add work button */
+    .add-card {
+      background: transparent;
+      padding: 2.2rem 2rem;
+      border: 1px dashed rgba(240,230,211,.1);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: .6rem;
+      cursor: none; transition: all .2s;
+      min-height: 220px;
+    }
+    .add-card:hover { border-color: rgba(212,114,42,.4); background: rgba(212,114,42,.04); }
+    .add-icon { font-size: 1.5rem; color: rgba(168,152,128,.3); transition: color .2s; }
+    .add-card:hover .add-icon { color: var(--accent); }
+    .add-label {
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem; letter-spacing: .15em;
+      color: rgba(168,152,128,.3); text-transform: uppercase;
+    }
+    .add-card:hover .add-label { color: var(--accent); }
+
+    /* ---- About strip ---- */
+    .about-strip {
+      padding: 5rem 3rem;
+      background: var(--warm);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 3rem; flex-wrap: wrap;
+    }
+    .about-strip-text h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem; font-weight: 700; margin-bottom: .8rem;
+    }
+    .about-strip-text h2 span { color: var(--accent); }
+    .about-strip-text p { color: var(--dim); font-size: .9rem; max-width: 460px; line-height: 1.9; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .8rem 2rem;
+      border: 1.5px solid rgba(240,230,211,.2);
+      border-radius: 3px; color: var(--sand);
+      font-family: 'Space Mono', monospace;
+      font-size: .78rem; letter-spacing: .1em;
+      text-decoration: none; white-space: nowrap;
+      transition: all .25s;
+    }
+    .btn-outline:hover { border-color: var(--sand); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 680px) {
+      .page-hero { padding: 0 1.5rem 3rem; }
+      .works-section { padding: 3rem 1.5rem; }
+      .about-strip { padding: 4rem 1.5rem; }
+      .works-toolbar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">林士恩 · Portfolio</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="portfolio.html" class="active">Works</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HERO -->
+<header class="page-hero">
+  <div class="page-hero-bg">
+    <div class="ph-ring ph-r1"></div>
+    <div class="ph-ring ph-r2"></div>
+  </div>
+  <div class="page-hero-content">
+    <div class="page-eyebrow">林士恩 · Selected Works</div>
+    <h1 class="page-title">
+      Work<span class="outline">s.</span>
+    </h1>
+    <p class="page-sub">裝置 · 3D · UI/UX · 聲音 · 攝影 · 程式</p>
+  </div>
+</header>
+
+<!-- WORKS -->
+<section class="works-section">
+  <div class="works-toolbar reveal">
+    <div class="toolbar-left">
+      <span class="works-count" id="works-count">— Works</span>
+      <span class="edit-hint">✏️ 點擊欄位直接填寫</span>
+    </div>
+    <div class="filter-tabs" id="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="3D">3D</button>
+      <button class="filter-tab" data-filter="UI/UX">UI / UX</button>
+      <button class="filter-tab" data-filter="Installation">Installation</button>
+      <button class="filter-tab" data-filter="Sound">Sound</button>
+      <button class="filter-tab" data-filter="Photo">Photo</button>
+    </div>
+  </div>
+
+  <div class="works-grid reveal" id="works-grid"></div>
+</section>
+
+<!-- ABOUT STRIP -->
+<section class="about-strip">
+  <div class="about-strip-text reveal">
+    <h2>About <span>Shi-en.</span></h2>
+    <p>科技藝術學生，在程式碼與感官之間探索創作。想更了解我是怎樣的人？</p>
+  </div>
+  <a href="index.html#about" class="btn-outline reveal" data-hover>
+    Read More &nbsp;→
+  </a>
+</section>
+
+<footer>
+  <span>© 2025 林士恩 Shi-en Lin</span>
+  <span>Hsinchu, Taiwan &nbsp;·&nbsp; <a href="index.html">← Home</a></span>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  /* ============ Works data ============ */
+  const STORAGE_KEY = 'works_shi_en_v2';
+  const EMOJIS = ['🌿','🔮','✦','🎛️','📷','⚡','🌊','🖋️','🔌','🎞️','🧪','🔬'];
+
+  function defaultWorks() {
+    return Array.from({length:6}, (_,i) => ({
+      emoji: EMOJIS[i], cat:'', title:'', desc:'', tag:''
+    }));
+  }
+
+  function loadWorks() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultWorks(); }
+    catch { return defaultWorks(); }
+  }
+
+  function saveWorks() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(worksData)); } catch{}
+    showToast('已儲存 ✓');
+  }
+
+  const worksData = loadWorks();
+
+  /* ============ Render ============ */
+  function renderWorks(filter) {
+    const grid = document.getElementById('works-grid');
+    const cursor = document.getElementById('cursor');
+    grid.innerHTML = '';
+
+    let shown = 0;
+    worksData.forEach((w, i) => {
+      if (filter && filter !== 'all') {
+        const cat = (w.cat || '').toLowerCase();
+        if (!cat.includes(filter.toLowerCase())) return;
+      }
+      shown++;
+      const card = document.createElement('div');
+      card.className = 'work-card reveal';
+
+      card.innerHTML = `
+        <div class="work-index">${String(i+1).padStart(2,'0')}</div>
+        <button class="work-emoji-btn" title="點我換圖示" data-idx="${i}">${w.emoji}</button>
+        <input class="work-cat-input" placeholder="類別 / Category" value="${w.cat||''}" data-field="cat" data-idx="${i}">
+        <input class="work-title-input" placeholder="作品名稱（點此填寫）" value="${w.title||''}" data-field="title" data-idx="${i}">
+        <textarea class="work-desc-input" placeholder="一句話介紹這個作品..." data-field="desc" data-idx="${i}">${w.desc||''}</textarea>
+        <div class="work-footer">
+          <input class="work-tag-input" placeholder="年份 / 標籤…" value="${w.tag||''}" data-field="tag" data-idx="${i}">
+          <button class="work-save-btn" data-idx="${i}">儲存</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // Add card
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-card reveal';
+    addBtn.innerHTML = `<span class="add-icon">＋</span><span class="add-label">新增作品</span>`;
+    addBtn.addEventListener('click', () => {
+      worksData.push({ emoji: EMOJIS[worksData.length % EMOJIS.length], cat:'', title:'', desc:'', tag:'' });
+      saveWorks();
+      renderWorks(currentFilter);
+    });
+    grid.appendChild(addBtn);
+
+    // Update count
+    document.getElementById('works-count').textContent = `${shown} Works`;
+
+    // Bind inputs
+    grid.querySelectorAll('[data-field]').forEach(el => {
+      el.addEventListener('input', e => {
+        const idx = +e.target.dataset.idx;
+        worksData[idx][e.target.dataset.field] = e.target.value;
+      });
+    });
+
+    // Save buttons
+    grid.querySelectorAll('.work-save-btn').forEach(btn => {
+      btn.addEventListener('click', () => saveWorks());
+    });
+
+    // Emoji cycle
+    grid.querySelectorAll('.work-emoji-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const idx = +btn.dataset.idx;
+        const cur = EMOJIS.indexOf(worksData[idx].emoji);
+        worksData[idx].emoji = EMOJIS[(cur + 1) % EMOJIS.length];
+        btn.textContent = worksData[idx].emoji;
+      });
+    });
+
+    // Cursor / hover
+    grid.querySelectorAll('.work-emoji-btn, .work-save-btn, .add-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+    });
+
+    // Re-trigger reveal
+    requestAnimationFrame(() => {
+      grid.querySelectorAll('.reveal').forEach(r => {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+        }, {threshold:.08});
+        obs.observe(r);
+      });
+    });
+  }
+
+  /* ============ Filter tabs ============ */
+  let currentFilter = 'all';
+  document.getElementById('filter-tabs').querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentFilter = tab.dataset.filter;
+      renderWorks(currentFilter);
+    });
+  });
+
+  renderWorks('all');
+</script>
+</body>
+</html>

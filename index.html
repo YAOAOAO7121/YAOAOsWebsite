@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>林士恩 Shi-en Lin</title>
+  <meta name="description" content="林士恩 Shi-en Lin — Creative Technologist & Media Artist. 3D · UI/UX · TouchDesigner · Sound · Circuit Design.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ---- Index-only styles ---- */
+
+    /* Full-screen intro overlay */
+    #intro {
+      position: fixed; inset: 0;
+      background: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 500;
+      transition: opacity .8s ease, visibility .8s;
+    }
+    #intro.done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .intro-text {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1.2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--sand);
+      letter-spacing: -.02em;
+      text-align: center;
+      overflow: hidden;
+    }
+    .intro-line {
+      display: block;
+      transform: translateY(110%);
+      transition: transform .6s cubic-bezier(.16,1,.3,1);
+    }
+    .intro-line.up { transform: translateY(0); }
+    .intro-accent { color: var(--accent); }
+
+    /* Progress bar */
+    #intro-bar {
+      position: absolute; bottom: 0; left: 0;
+      height: 2px; width: 0;
+      background: var(--accent);
+      transition: width .05s linear;
+    }
+
+    /* ---- HERO ---- */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 0 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Rings */
+    .hero-bg { position: absolute; inset: 0; pointer-events: none; }
+    .ring {
+      position: absolute; border-radius: 50%; border: 1px solid;
+      transform: translate(-50%,-50%);
+      animation: breathe 7s ease-in-out infinite alternate;
+    }
+    .r1 { width:500px;  height:500px;  top:45%; left:72%; border-color:rgba(212,114,42,.14); }
+    .r2 { width:800px;  height:800px;  top:45%; left:72%; border-color:rgba(201,168,76,.08); animation-delay:-2.5s; }
+    .r3 { width:1100px; height:1100px; top:45%; left:72%; border-color:rgba(184,76,30,.05);  animation-delay:-5s; }
+    @keyframes breathe {
+      from { transform:translate(-50%,-50%) scale(.97); }
+      to   { transform:translate(-50%,-50%) scale(1.03); }
+    }
+
+    /* Autumn leaves — small floating dots */
+    .leaves { position: absolute; inset: 0; pointer-events: none; }
+    .leaf {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      animation: floatLeaf linear infinite;
+      opacity: 0;
+    }
+    @keyframes floatLeaf {
+      0%   { transform: translateY(0) rotate(0deg);   opacity: 0; }
+      10%  { opacity: .5; }
+      90%  { opacity: .3; }
+      100% { transform: translateY(-80px) rotate(120deg); opacity: 0; }
+    }
+
+    /* Main content */
+    .hero-main {
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 10rem;
+      position: relative; z-index: 2;
+    }
+
+    .eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: .68rem;
+      letter-spacing: .25em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+      opacity: 0; animation: fadeUp .6s .2s forwards;
+    }
+
+    .name-zh {
+      font-size: clamp(.9rem, 1.8vw, 1.3rem);
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: .35em;
+      margin-bottom: .4rem;
+      opacity: 0; animation: fadeUp .6s .38s forwards;
+    }
+
+    .name-en {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(3.8rem, 10vw, 9rem);
+      font-weight: 700;
+      line-height: .88;
+      letter-spacing: -.03em;
+      opacity: 0; animation: fadeUp .7s .55s forwards;
+    }
+    .name-en .first  { color: var(--sand); display: block; }
+    .name-en .last   { -webkit-text-stroke: 1.5px var(--sand); color: transparent; display: block; }
+    .name-en .dot    { color: var(--accent); }
+
+    .hero-divider {
+      width: 48px; height: 1px;
+      background: var(--accent);
+      margin: 2.5rem 0 1rem;
+      opacity: 0; animation: fadeUp .6s .75s forwards;
+    }
+
+    .hero-role {
+      font-size: .9rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+      line-height: 1.8;
+      opacity: 0; animation: fadeUp .6s .88s forwards;
+    }
+
+    /* CTA buttons */
+    .hero-cta {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      margin-top: 3rem;
+      opacity: 0; animation: fadeUp .6s 1.05s forwards;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .85rem 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: .78rem;
+      letter-spacing: .1em;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: all .25s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--ink);
+      border: 1.5px solid var(--accent);
+    }
+    .btn-primary:hover { background: var(--rust); border-color: var(--rust); color: var(--sand); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--sand);
+      border: 1.5px solid rgba(240,230,211,.2);
+    }
+    .btn-ghost:hover { border-color: var(--sand); }
+    .btn-arrow { transition: transform .2s; }
+    .btn:hover .btn-arrow { transform: translateX(4px); }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; gap: 1.2rem;
+      opacity: 0; animation: fadeUp .6s 1.3s forwards;
+    }
+    .scroll-line {
+      width: 48px; height: 1px;
+      background: rgba(168,152,128,.3);
+      position: relative; overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--accent);
+      animation: scan 2.2s ease-in-out infinite;
+    }
+    @keyframes scan { to { left: 100%; } }
+    .scroll-label {
+      font-family: 'Space Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .2em;
+      color: rgba(168,152,128,.4);
+      text-transform: uppercase;
+    }
+
+    /* ---- MANIFESTO ---- */
+    .manifesto {
+      padding: 8rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1.8fr;
+      gap: 5rem;
+      align-items: start;
+      border-top: 1px solid var(--border);
+    }
+    .manifesto-left .section-eyebrow { margin-bottom: 1.5rem; }
+    .manifesto-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 5rem;
+      font-weight: 700;
+      color: rgba(212,114,42,.15);
+      line-height: 1;
+      margin-top: 1rem;
+    }
+
+    .manifesto-right blockquote {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: -.01em;
+      color: var(--sand);
+      margin-bottom: 2.5rem;
+      font-style: italic;
+    }
+    .manifesto-right blockquote em { color: var(--accent); font-style: normal; }
+
+    .manifesto-body {
+      color: var(--dim);
+      font-size: .95rem;
+      line-height: 2;
+    }
+    .manifesto-body strong { color: var(--sand); font-weight: 500; }
+
+    /* ---- FIELDS ---- */
+    .fields {
+      padding: 6rem 3rem;
+      background: var(--warm);
+      border-top: 1px solid var(--border);
+    }
+    .fields-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 3rem;
+    }
+    .fields-header h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem; font-weight: 700;
+    }
+    .fields-count {
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+      letter-spacing: .15em;
+    }
+
+    .fields-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: rgba(240,230,211,.05);
+    }
+
+    .field-item {
+      background: var(--warm);
+      padding: 2rem 1.8rem;
+      border: 1px solid rgba(240,230,211,.05);
+      transition: background .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .field-item::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width .35s cubic-bezier(.16,1,.3,1);
+    }
+    .field-item:hover { background: rgba(212,114,42,.06); }
+    .field-item:hover::after { width: 100%; }
+
+    .field-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; }
+    .field-name {
+      font-size: .95rem;
+      font-weight: 500;
+      margin-bottom: .4rem;
+    }
+    .field-sub {
+      font-size: .75rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+
+    /* ---- NOW ---- */
+    .now {
+      padding: 6rem 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .now-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+      margin-top: 3rem;
+    }
+    .now-card {
+      padding: 2.5rem 2rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: border-color .25s;
+    }
+    .now-card:hover { border-color: rgba(212,114,42,.3); }
+    .now-label {
+      font-family: 'Space Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .now-content {
+      font-size: .9rem;
+      color: var(--dim);
+      line-height: 1.9;
+    }
+    .now-content strong { color: var(--sand); font-weight: 500; }
+
+    /* ---- LINK to Portfolio ---- */
+    .portfolio-link-section {
+      padding: 6rem 3rem;
+      background: var(--sand);
+      color: var(--ink);
+      text-align: center;
+    }
+    .portfolio-link-section h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .portfolio-link-section h2 span { color: var(--rust); }
+    .portfolio-link-section p {
+      color: rgba(26,20,16,.5);
+      font-size: .95rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .hero { padding: 0 1.5rem 3rem; }
+      .manifesto { grid-template-columns: 1fr; gap: 2.5rem; padding: 5rem 1.5rem; }
+      .fields, .now, .portfolio-link-section { padding: 4rem 1.5rem; }
+      .now-grid { grid-template-columns: 1fr; }
+      .fields-header { flex-direction: column; gap: .5rem; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="toast"></div>
+
+<!-- ============ INTRO ANIMATION ============ -->
+<div id="intro">
+  <div class="intro-text">
+    <span class="intro-line" id="il-1"><span class="intro-accent">林士恩</span></span>
+    <span class="intro-line" id="il-2" style="font-size:.45em; letter-spacing:.15em; font-weight:400; color: rgba(240,230,211,.5)">Shi-en Lin</span>
+  </div>
+  <div id="intro-bar"></div>
+</div>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <a href="index.html" class="nav-logo">林士恩 · Portfolio</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="portfolio.html">Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
+    <div class="leaves" id="leaves"></div>
+  </div>
+
+  <div class="hero-main">
+    <div class="eyebrow">Creative Technologist &amp; Media Artist</div>
+    <div class="name-zh">林 士 恩</div>
+    <div class="name-en">
+      <span class="first">Shi-en<span class="dot">.</span></span>
+      <span class="last">Lin</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-role">
+      3D Modeling &nbsp;·&nbsp; UI / UX Design &nbsp;·&nbsp; TouchDesigner<br>
+      Sound Design &nbsp;·&nbsp; Circuit Design &nbsp;·&nbsp; Installation Art
+    </div>
+    <div class="hero-cta">
+      <a href="portfolio.html" class="btn btn-primary" data-hover>
+        View Works <span class="btn-arrow">→</span>
+      </a>
+      <a href="#about" class="btn btn-ghost" data-hover>
+        About Me
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-line"></span>
+    <span class="scroll-label">Scroll</span>
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto" id="about">
+  <div class="manifesto-left reveal">
+    <div class="section-eyebrow">About</div>
+    <div class="manifesto-num">01</div>
+  </div>
+  <div class="manifesto-right reveal">
+    <blockquote>
+      "每行程式碼都是一個選擇，<br>
+      每個電路節點都是一個<em>詞語</em>。"
+    </blockquote>
+    <div class="manifesto-body">
+      <p>嗨，我是<strong>林士恩</strong>，一名學習科技藝術的學生，創作游走在感官與技術的交界地帶。</p>
+      <br>
+      <p>我相信跨域才能看見真正有趣的縫隙——所以我同時學習 <strong>3D 建模</strong>、<strong>互動裝置</strong>、<strong>電路板設計</strong>和<strong>聲音藝術</strong>，不是因為無法專注，而是因為每個領域都在告訴我不同的故事。</p>
+      <br>
+      <p>目前在新竹，持續探索讓人停下腳步的體驗。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIELDS ============ -->
+<section class="fields">
+  <div class="fields-header reveal">
+    <div>
+      <div class="section-eyebrow">What I Do</div>
+      <h2 class="section-title" style="margin-bottom:0">創作領域</h2>
+    </div>
+    <span class="fields-count">08 Fields</span>
+  </div>
+
+  <div class="fields-list reveal">
+    <div class="field-item" data-hover>
+      <span class="field-icon">🔮</span>
+      <div class="field-name">3D Modeling</div>
+      <div class="field-sub">Blender · Cinema 4D</div>
+    </div>
+    <div class="field-item" data-hover>
+      <span class="field-icon">✦</span>
+      <div class="field-name">UI / UX Design</div>
+      <div class="field-sub">Figma · Prototyping</div>
+    </div>
+    <div class="field-item" data-hover>
+      <span class="field-icon">⚡</span>
+      <div class="field-name">TouchDesigner</div>
+      <div class="field-sub">Real-time AV Systems</div>
+    </div>
+    <div class="field-item" data-hover>
+      <span class="field-icon">🌿</span>
+      <div class="field-name">Installation Art</div>
+      <div class="field-sub">Interactive Experiences</div>
+    </div>
+    <div class="field-item" data-hover>
+      <span class="field-icon">🎛️</span>
+      <div class="field-name">Sound Design</div>
+      <div class="field-sub">Max/MSP · Field Recording</div>
+    </div>
+    <div class="field-item" data-hover>
+      <span class="field-icon">📷</span>
+      <div class="field-name">Photography</div>
+      <div class="field-sub">Long Exposure · Urban</div>
+    </div>
+    <div class="field-item" data-hover>
+      <span class="field-icon">💻</span>
+      <div class="field-name">Creative Coding</div>
+      <div class="field-sub">p5.js · Python</div>
+    </div>
+    <div class="field-item" data-hover>
+      <span class="field-icon">🔌</span>
+      <div class="field-name">Circuit Design</div>
+      <div class="field-sub">Arduino · KiCad</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOW ============ -->
+<section class="now">
+  <div class="reveal">
+    <div class="section-eyebrow">Now</div>
+    <h2 class="section-title" style="font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;">最近在做什麼</h2>
+  </div>
+  <div class="now-grid">
+    <div class="now-card reveal">
+      <div class="now-label">Learning</div>
+      <div class="now-content">
+        深入研究<strong>聲音設計</strong>，探索 Max/MSP 與自製電路板的可能性。也在學更系統化的<strong>程式開發</strong>流程。
+      </div>
+    </div>
+    <div class="now-card reveal">
+      <div class="now-label">Making</div>
+      <div class="now-content">
+        開發一個結合感應器與即時視覺的<strong>互動裝置</strong>，試著讓聲音成為可以「看見」的形狀。
+      </div>
+    </div>
+    <div class="now-card reveal">
+      <div class="now-label">Thinking About</div>
+      <div class="now-content">
+        如何讓<strong>科技裝置</strong>不只是炫技，而是能夠讓人在其中停留、感受到某種溫度。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PORTFOLIO CTA ============ -->
+<section class="portfolio-link-section reveal" id="works-cta">
+  <h2>See the <span>Work</span></h2>
+  <p>所有作品、裝置、設計與實驗都在這裡。</p>
+  <a href="portfolio.html" class="btn btn-primary" data-hover style="display:inline-flex; font-size:.85rem;">
+    View Portfolio &nbsp;→
+  </a>
+</section>
+
+<!-- ============ CONTACT / FOOTER ============ -->
+<section style="padding:5rem 3rem; border-top:1px solid var(--border);" id="contact">
+  <div class="section-eyebrow reveal">Get In Touch</div>
+  <h2 class="reveal" style="font-family:'Space Mono',monospace;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;margin-bottom:1rem;">
+    讓我們一起做點<br><span style="color:var(--accent)">有趣的事。</span>
+  </h2>
+  <p class="reveal" style="color:var(--dim);max-width:400px;line-height:1.9;font-size:.92rem;margin-bottom:2.5rem;">
+    對合作展覽、裝置委製、UI 設計或任何奇妙的想法感興趣？隨時歡迎。
+  </p>
+  <div class="reveal" style="display:flex;flex-wrap:wrap;gap:.8rem;">
+    <a href="mailto:hello@shi-en.com" class="btn btn-primary" data-hover>✉ hello@shi-en.com</a>
+    <a href="#" class="btn btn-ghost" data-hover>Instagram</a>
+    <a href="#" class="btn btn-ghost" data-hover>GitHub</a>
+    <a href="#" class="btn btn-ghost" data-hover>Behance</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 林士恩 Shi-en Lin</span>
+  <span>Made in Hsinchu &nbsp;·&nbsp; <a href="portfolio.html">Works →</a></span>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  /* ---- Intro sequence ---- */
+  (function() {
+    const intro = document.getElementById('intro');
+    const bar   = document.getElementById('intro-bar');
+    const lines = [document.getElementById('il-1'), document.getElementById('il-2')];
+    let progress = 0;
+
+    // Animate lines up
+    setTimeout(() => lines[0].classList.add('up'), 200);
+    setTimeout(() => lines[1].classList.add('up'), 500);
+
+    // Fill progress bar
+    const iv = setInterval(() => {
+      progress = Math.min(progress + 2, 100);
+      bar.style.width = progress + '%';
+      if (progress >= 100) clearInterval(iv);
+    }, 18);
+
+    // Dismiss
+    setTimeout(() => intro.classList.add('done'), 1800);
+  })();
+
+  /* ---- Floating leaves ---- */
+  (function() {
+    const container = document.getElementById('leaves');
+    const colors = ['#D4722A','#C9A84C','#B84C1E','#7A8C6E','#A89880'];
+    for (let i = 0; i < 18; i++) {
+      const leaf = document.createElement('div');
+      leaf.className = 'leaf';
+      leaf.style.cssText = `
+        left: ${Math.random() * 100}%;
+        bottom: ${Math.random() * 40}%;
+        background: ${colors[i % colors.length]};
+        width: ${3 + Math.random() * 4}px;
+        height: ${3 + Math.random() * 4}px;
+        animation-duration: ${5 + Math.random() * 8}s;
+        animation-delay: ${Math.random() * 6}s;
+        opacity: 0;
+      `;
+      container.appendChild(leaf);
+    }
+  })();
+</script>
+</body>
+</html>
